@@ -50,7 +50,7 @@ rule cassandra-insecure-client-encryption-disabled {
   enabled true
   priority 85
   severity warning
-  ASK write
+  LOG write
   IF path GLOB "**/cassandra.yaml" AND content CONTAINS "client_encryption_options.enabled: false"
   MESSAGE "Insecure Default: Client-to-node encryption (SSL/TLS) is disabled in cassandra.yaml. Data in transit between clients and Cassandra nodes will not be encrypted, making it vulnerable to eavesdropping. Enable client encryption for sensitive data by setting 'client_encryption_options.enabled: true' and configuring SSL/TLS certificates."
 }
@@ -59,7 +59,7 @@ rule cassandra-deprecated-compact-storage {
   enabled true
   priority 70
   severity warning
-  ASK write
+  LOG write
   IF path GLOB "**/*.cql" AND content CONTAINS "CREATE TABLE" AND content CONTAINS "WITH COMPACT STORAGE"
   MESSAGE "Deprecated Feature: 'COMPACT STORAGE' is used in a CREATE TABLE statement. This option is deprecated and can lead to compatibility issues with newer Cassandra features and drivers. Avoid using COMPACT STORAGE for new tables; it is primarily for backward compatibility with very old Cassandra versions."
 }
@@ -68,7 +68,7 @@ rule cassandra-cql-style-uppercase-keywords {
   enabled true
   priority 50
   severity warning
-  ASK write
+  LOG write
   IF path GLOB "**/*.cql" AND (content CONTAINS " select " OR content CONTAINS " from " OR content CONTAINS " where " OR content CONTAINS " insert " OR content CONTAINS " update " OR content CONTAINS " delete " OR content CONTAINS " create " OR content CONTAINS " table " OR content CONTAINS " keyspace ")
   MESSAGE "Style Violation: Common CQL keywords (e.g., SELECT, FROM, WHERE) are found in lowercase. While syntactically valid, it is a widely accepted best practice in the Cassandra community to use uppercase for CQL keywords for readability and consistency. Please adhere to this convention."
 }
